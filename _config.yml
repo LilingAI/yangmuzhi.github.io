@@ -1,10 +1,10 @@
 # Site settings
 title: 木之 Blog
-SEOTitle: 木之的博客 | BY Blog
-header-img: img/post-bg-desk.jpg
+SEOTitle: 木之的博客 | mz Blog
+#header-img: img/post-bg-desk.jpg
 email: 621038621@qq.com
-description: "Every failure is leading towards success."
-keyword: "muzhi"
+description: "Good man"
+keyword: "muzhi,学习，体育"
 url: "http://yangmuzhi.github.io"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/yangmuzhi/yangmuzhi.github.io.git" # you code repository
@@ -69,7 +69,7 @@ kramdown:
 
 # Analytics settings
 # Baidu Analytics
-ba_track_id: b50bf2b12b5338a1845e33832976fd68
+#ba_track_id: b50bf2b12b5338a1845e33832976fd68
 
 # Google Analytics
 #ga_track_id: 'UA-90855596-1'            # Format: UA-xxxxxx-xx
