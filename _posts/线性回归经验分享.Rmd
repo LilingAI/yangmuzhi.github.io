@@ -1,0 +1,113 @@
+---
+title: "线性回归简介   cqu.ai 第一次沙龙分享讲义"
+author: "muzhi"
+date: "2017/12/12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+本文简单介绍线性回归的基本原理，从线性代数，机器学习的角度看待这个问题。本文严重~~参考~~了MIT线性代数和斯坦福机器学习。讲义比较简单，具体听主讲人讲解。
+
+----
+## 从线性代数看待这个问题
+
+### 投影
+要理解最小二乘的线代形式可以从投影的角度入手。
+
+已知两个向量，不平行
+$$a \\ b$$
+但是我们还是想求一个最优的x，使$$ax=b$$
+设P为投影矩阵
+$$Pb=\widehat{b}\\
+a\widehat{x} = \widehat{b}\\
+a\widehat{x} = P b\\
+e = b-a\widehat{x}\\a^Te= 0$$
+
+
+
+可以求得投影矩阵
+$$P = \frac{aa^T}{a^Ta} $$
+
+
+
+
+
+
+### 最小二乘法
+最小二乘法与投影的角度一样的，只不过是用在了矩阵上。
+已知矩阵$$A$$和向量$$b$$ 
+求解
+$$Ax = b$$，但是b不在A的列空间内，所以x无解，但是可以求出一个最优的$$\widehat{x}$$以及
+投影矩阵$$P$$
+使得$$Pb$$在$$A$$的列空间内，$$\widehat{x}$$即为参数的最佳估计。
+
+根据投影的套路可以得：
+$$A\widehat{x}=\widehat{P}b$$
+e与A垂直
+$$e=b-\widehat{P}b\\A^Te=0$$
+求得
+$$P = A(A^TA)^{-1}A^T\\
+\widehat{x}=(A^TA)^{-1}A^Tb$$
+
+***
+## 从优化的角度看待这个问题
+线性回归的非线代算法的构成主要可以分成两个模块，一个是代价函数(costfunction)，另一个是优化方法。
+线性回归的代价函数很简单，但是一般代价函数需要构造成凸函数。
+
+###求偏导，求极值
+只要代价函数是凸函数，那么对其求偏导等于零时求的的x即为，最优解。
+
+### 梯度下降
+梯度下降是机器学习中常用的，基础的优化算法。
+
+```{r}
+A <- matrix(c(1,1,1,1,2,3), nrow = 3, ncol = 2)
+b <- matrix(c(1,2,2), nrow = 3, ncol = 1)
+##初始化参数x
+x <- matrix(0, nrow = 2, ncol = 1)
+
+##定义函数
+f <- function(A, x){
+  return(A%*%x)
+}
+##定于代价函数
+costfun <- function(b,bhat){
+  
+  return(sum((b - bhat)^2))
+}
+###
+linear_optimal <- function(b, A, x, learn_ratio = 0.1){
+  bhat <- f(A,x)
+  cost <- costfun(b,bhat)
+  e <- 1
+  while (e >= 1e-10) {
+    dx1 <- sum(-(b - bhat))
+    dx2 <- -A[,2]%*%(b-bhat)
+    
+    x[1] <- x[1] - learn_ratio*dx1
+    x[2] <- x[2] - learn_ratio*dx2
+    
+    bhat <- f(A,x)
+    cost_temp <- costfun(b,bhat)
+    e <- abs(cost - cost_temp)
+    cost <- cost_temp
+    #print(x)
+    
+  }
+  return(list(bhat = bhat, cost = cost,x = x))
+}
+###
+linear_optimal(b, A, x)
+
+###check
+d <- data.frame(x = c(1,2,3),y = c(1,2,2) )
+
+l <- lm(y~x, data = d)
+l$coefficients
+
+```
+
+
+
